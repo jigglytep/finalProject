@@ -1,5 +1,5 @@
 // const FunFact = require('../model/funFact.json');
-// const State = require('../model/states.json')
+const State = require('../model/funFact');
 
 const data = {
     states: require('../model/states.json'),
@@ -7,78 +7,116 @@ const data = {
 }
 
 const getAllStates = async (req, res) => {
-    // const employees = await FunFact.find();
-    // if (!employees) return res.status(204).json({ 'message': 'No employees found.' });
+    const facts = await State.find();
+    for ( index in data){
+    }
+    
+    for ( index in data.states){
+        
+        fact = facts.find(st => st.state === data.states[index].code );    
+        if (!fact) {
+            continue;
+        }else{
+            data.states[index]["funfacts"] = fact["funfacts"];
+        }
+    }
+    if (req.query.contig === 'true'){
+        const contig =JSON.parse(JSON.stringify(data.states))
+        contig.splice(1,1);
+        contig.splice(9,1);
+        data.states = contig
+        res.json(contig);
+
+    }else if (req.query.contig === 'false'){
+        const contig =JSON.parse(JSON.stringify(data.states))
+
+        contig.splice(0,1);
+        contig.splice(1,8);
+        contig.splice(2,40);
+        res.json(contig);
+    }else{
     res.json(data.states);
 }
-
-
-const getState = (req, res) => {
-    const state = data.states.find(st => st.code === req.params.slug);
-    if (!state) {
-        return res.status(400).json({ "message": `Employee ID ${req.params.slug} not found` });
-    }
-    res.json(state);
 }
 
-// const createNewEmployee = async (req, res) => {
-//     if (!req?.body?.firstname || !req?.body?.lastname) {
-//         return res.status(400).json({ 'message': 'First and last names are required' });
-//     }
 
-//     try {
-//         const result = await FunFact.create({
-//             firstname: req.body.firstname,
-//             lastname: req.body.lastname
-//         });
+const getState = async (req, res) => {
+    const fact = await State.findOne({ state: req.params.slug.toUpperCase() }).exec();
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    if (!fact) {
+        res.json(state);
+    }else{
+        state["funfacts"] = fact["funfacts"];
+        res.json(state);
+    }
+        
+}
 
-//         res.status(201).json(result);
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
+const getFunFact = async(req,res) =>{
+    const fact = await State.findOne({ state: req.params.slug.toUpperCase() }).exec();
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    if (!fact) {
+        res.status(404).json({"message":  "No Fun Facts found for Georgia"});
+    }else{
+        res.json({"funfact": fact["funfacts"][Math.floor(Math.random()*fact["funfacts"].length)]});
+    }
+        
+}
 
-// const updateEmployee = async (req, res) => {
-//     if (!req?.body?.id) {
-//         return res.status(400).json({ 'message': 'ID parameter is required.' });
-//     }
+const getCapital = (req,res) =>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    
+    res.json({"state": state.state,
+        "capital": state.capital_city});
+            
+}
 
-//     const employee = await FunFact.findOne({ _id: req.body.id }).exec();
-//     if (!employee) {
-//         return res.status(204).json({ "message": `No employee matches ID ${req.body.id}.` });
-//     }
-//     if (req.body?.firstname) employee.firstname = req.body.firstname;
-//     if (req.body?.lastname) employee.lastname = req.body.lastname;
-//     const result = await employee.save();
-//     res.json(result);
-// }
 
-// const deleteEmployee = async (req, res) => {
-//     if (!req?.body?.id) return res.status(400).json({ 'message': 'FunFact ID required.' });
+const getNickname = (req,res) =>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    
+    res.json({"state": state.state,
+        "nickname": state.nickname});           
+  }
 
-//     const employee = await FunFact.findOne({ _id: req.body.id }).exec();
-//     if (!employee) {
-//         return res.status(204).json({ "message": `No employee matches ID ${req.body.id}.` });
-//     }
-//     const result = await employee.deleteOne(); //{ _id: req.body.id }
-//     res.json(result);
-// }
 
-// const getEmployee = async (req, res) => {
-//     if (!req?.params?.id) return res.status(400).json({ 'message': 'FunFact ID required.' });
+const getPopulation = (req,res) =>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    
+    res.json({"state": state.state,
+        "population": state.population.toLocaleString()});           
+  }
 
-//     const employee = await FunFact.findOne({ _id: req.params.id }).exec();
-//     if (!employee) {
-//         return res.status(204).json({ "message": `No employee matches ID ${req.params.id}.` });
-//     }
-//     res.json(employee);
-// }
-
+const getAdmission = (req,res) =>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+    
+    res.json({"state": state.state,
+        "admitted": state.admission_date});           
+  }
 module.exports = {
     getAllStates,
-    getState
-    // createNewEmployee,
-    // updateEmployee,
-    // deleteEmployee,
-    // getEmployee
+    getState,
+    getFunFact,
+    getCapital,
+    getNickname,
+    getPopulation,
+    getAdmission
 }
