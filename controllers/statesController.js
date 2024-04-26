@@ -27,7 +27,7 @@ const getAllStates = async (req, res) => {
     }else if (req.query.contig === 'false'){
         const contig =JSON.parse(JSON.stringify(data.states))
         for ( index in contig){
-            if(contig[index].code != "AK" || contig[index].code != "HI"){
+            if(contig[index].code != "AK" && contig[index].code != "HI"){
                 contig.splice(index, 1);
             }
         }
