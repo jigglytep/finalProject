@@ -1,6 +1,6 @@
 // const FunFact = require('../model/funFact.json');
 const State = require('../model/funFact');
-
+const {log2} = require('../middleware/logEvents')
 const data = {
     states: require('../model/states.json'),
     // setStates: function (data) { this.States = data }
@@ -119,7 +119,7 @@ const getAdmission = (req,res) =>{
 
 
 const catchAll = (req, res)=>{
-    console.log(req.body);
+    console.log(req.body)
 }
 
 module.exports = {

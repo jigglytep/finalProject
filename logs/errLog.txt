@@ -1,3 +1,7 @@
 20240423	21:59:30	068c465a-b5d9-4e49-b3fa-cc7fb94feb7f	Error: ENOENT: no such file or directory, stat 'C:\Users\Lev\Documents\views\subdir\index.html'
 20240423	22:00:09	152ce918-9a66-4fd0-8efa-96d355e37ccc	Error: ENOENT: no such file or directory, stat 'C:\Users\Lev\Documents\views\subdir\index.html'
 20240423	22:04:56	97e35120-ec52-42a2-a5c2-bc52e4e2cd57	Error: ENOENT: no such file or directory, stat 'C:\Users\Lev\Documents\views\subdir\index.html'
+20240428	02:18:53	322c24ec-4877-4e50-a4f1-06db5ef10601	TypeError: logger is not a function
+20240428	02:36:51	018df9d2-31c8-49fc-a3fe-a296e6a8e34c	TypeError: Cannot read properties of undefined (reading 'logEvent')
+20240428	11:16:25	cd3be978-2336-4f15-a728-65a2153b0bc2	TypeError: Cannot read properties of undefined (reading 'logEvents')
+20240428	11:49:10	63ce6575-d728-47e9-b2ff-3a857b3198c9	TypeError: Cannot read properties of undefined (reading 'logEvents')

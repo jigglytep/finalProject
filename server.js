@@ -10,7 +10,11 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 
 const PORT = process.env.PORT || 3500;
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
 
+// parse application/json
+app.use(bodyParser.json())
 
 // Connect to MongoDB
 connectDB();
