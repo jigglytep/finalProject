@@ -10,7 +10,7 @@ const getAllStates = async (req, res) => {
     const facts = await State.find();
     
     for ( index in data.states){      
-        fact = facts.find(st => st.state === data.states[index].code );    
+        let fact = facts.find(st => st.state === data.states[index].code );    
         if (!fact) {
             continue;
         }else{
@@ -29,6 +29,15 @@ const getAllStates = async (req, res) => {
         contig =[
             JSON.parse(JSON.stringify(data.states[1])),
             JSON.parse(JSON.stringify(data.states[10]))]
+
+        for (index in contig){
+            let fact = facts.find(st => st.state === contig[index].code );    
+            if (!fact) {
+                contig[index]["funfacts"] = [];
+            }else{
+                contig[index]["funfacts"] = fact["funfacts"];
+            }
+        }
         res.json(contig);
     }else{
     res.json(data.states);
