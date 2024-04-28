@@ -116,6 +116,12 @@ const getAdmission = (req,res) =>{
     res.json({"state": state.state,
         "admitted": state.admission_date});           
   }
+
+
+const catchAll = (req, res)=>{
+    console.log(req.body);
+}
+
 module.exports = {
     getAllStates,
     getState,
@@ -123,5 +129,6 @@ module.exports = {
     getCapital,
     getNickname,
     getPopulation,
+    catchAll,
     getAdmission
 }
