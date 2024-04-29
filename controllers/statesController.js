@@ -33,7 +33,7 @@ const getAllStates = async (req, res) => {
         for (index in contig){
             let fact = facts.find(st => st.state === contig[index].code );    
             if (!fact) {
-                contig[index]["funfacts"] = [];
+                continue;
             }else{
                 contig[index]["funfacts"] = fact["funfacts"];
             }
