@@ -25,18 +25,6 @@ const getAllStates = async (req, res) => {
 
     }else if (req.query.contig === 'false'){
         contig = data.states.filter(state => state.code === 'AK' || state.code === 'HI')
-        // contig =[
-        //     JSON.parse(JSON.stringify(data.states[1])),
-        //     JSON.parse(JSON.stringify(data.states[10]))]
-
-        // for (index in contig){
-        //     let fact = facts.find(st => st.state === contig[index].code );    
-        //     if (!fact) {
-        //         continue;
-        //     }else{
-        //         contig[index]["funfacts"] = fact["funfacts"];
-        //     }
-        // }
         res.json(contig);
     }else{
     res.json(data.states);
@@ -107,7 +95,7 @@ const getAdmission = (req,res) =>{
 
 const statePostAppend = async(req, res)=>{
     state = stateJSON(req, res);
-
+    slugURL =req.params.slug;
     try {
         if(!req.body.funfacts){
             return res.status(400).json({ "message":'State fun facts value required'});
@@ -115,7 +103,7 @@ const statePostAppend = async(req, res)=>{
         if(!Array.isArray(req.body.funfacts)){
             return res.status(400).json({ "message":'State fun facts value must be an array'});
         }
-        const stateFact = await State.findOne({ state:req.params.slug}).exec();
+        const stateFact = await State.findOne({ state:slugURL}).exec();
         if(!stateFact){
             await State.create({
                 slug: slugURL,
