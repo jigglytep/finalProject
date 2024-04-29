@@ -1,4 +1,3 @@
-// const FunFact = require('../model/funFact.json');
 const State = require('../model/State');
 const stateJSON = require('../middleware/stateJSON');
 const data = {
@@ -178,7 +177,7 @@ const statePatch = async(req, res)=>{
   };
 
 const stateDelete = async (req, res)=>{
-    const state = data.states.find(st => st.code === req.params.slug.toUppertCase());
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
     if (!state) {
         return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
     }
