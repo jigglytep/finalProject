@@ -17,14 +17,13 @@ const getAllStates = async (req, res) => {
         }
     }
     if (req.query.contig === 'true'){
-        const contig =JSON.parse(JSON.stringify(data.states))
-        contig.splice(1,1);
-        contig.splice(9,1);
-        data.states = contig
+        let contig = []
+        contig = data.states.filter(state => state.code !== 'AK' && state.code !== 'HI');
         res.json(contig);
 
     }else if (req.query.contig === 'false'){
-        contig = data.states.filter(state => state.code === 'AK' || state.code === 'HI')
+        let contig =[]
+           contig = data.states.filter(state => state.code === 'AK' || state.code === 'HI')
         res.json(contig);
     }else{
     res.json(data.states);
@@ -105,10 +104,11 @@ const statePostAppend = async(req, res)=>{
         }
         const stateFact = await State.findOne({ state:slugURL}).exec();
         if(!stateFact){
-            await State.create({
-                slug: slugURL,
-                "funfacts":[req.body.funfacts]
+            var result = await State.create({
+                state: slugURL,
+                funfacts:req.body.funfacts
                 });
+                res.status(200).json(result)
         }else{
             stateFact.funfacts.push(JSON.stringify(req.body.funfacts))
             await stateFact.save()
