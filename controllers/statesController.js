@@ -158,8 +158,9 @@ const statePatch = async(req, res)=>{
     }
 
     try {
-        const stateFact = await State.findOne({ sate: req.params.slug.toUpperCase() }).exec();
-        if(!stateFact || stateFact.state !== req.params.slug.toUpperCase()){
+        const Facts = await State.find().exec();
+        const stateFact = Facts.find(s => s.state === req.params.slug.toUpperCase())
+        if(!stateFact){
             return res.status(400).json({ "message":`No Fun Facts found for ${state.state}`});
         }else{
             if(stateFact.funfacts[req.body.index-1]){
@@ -177,23 +178,29 @@ const statePatch = async(req, res)=>{
   };
 
 const stateDelete = async (req, res)=>{
-    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    const state = data.states.find(st => st.code === req.params.slug.toUppertCase());
     if (!state) {
         return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
     }
+    if (!req.body.index || isNaN(req.body.index)){
+        return res.status(400).json({ "message":"State fun fact index value required"});
 
+    }
     try {
-        const result = await State.findOne({sate: req.params.slug.toUpperCase()}).exec();
-        if(!result){
-            return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+        const Facts = await State.find().exec();
+        const funFact = Facts.find(s => s.state === req.params.slug.toUpperCase())
+        if(!funFact){
+            return res.status(400).json({ "message":`No Fun Facts found for ${state.state}`});
         }else{
-            if(result.funfacts[req.body.index-1]){
-                result.funfacts.splice(req.body.index-1,1);
+            if(funFact.funfacts[req.body.index-1]){
+                funFact.funfacts.splice(req.body.index-1,1);
+                result = await funFact.save();
+                res.status(201).json(result);
             }else{
-                return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+                return res.status(404).json({ "message":`No Fun Fact found at that index for ${state.state}`});
+
             }
         }
-        res.status(201).json(result);
     } catch (err) {
         console.error(err);
     }
