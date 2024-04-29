@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const funFactSchema = new Schema({
+const stateSchema = new Schema({
     state: {
         type: String,
         required: true
@@ -12,4 +12,4 @@ const funFactSchema = new Schema({
     }]
 });
 
-module.exports = mongoose.model('States', funFactSchema);
+module.exports = mongoose.model('State', stateSchema);
