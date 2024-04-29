@@ -33,7 +33,11 @@ const getAllStates = async (req, res) => {
 
 const getState = async (req, res) => {
     const fact = await State.findOne({ state: req.params.slug.toUpperCase() }).exec();
-    state = stateJSON(req, res);
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
 
     if (!fact) {
         res.json(state);
@@ -46,7 +50,11 @@ const getState = async (req, res) => {
 
 const getFunFact = async(req,res) =>{
     const fact = await State.findOne({ state: req.params.slug.toUpperCase() }).exec();
-    state = stateJSON(req, res);
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
 
     if (!fact) {
         res.status(404).json({"message":  `No Fun Facts found for ${state.state}`});
@@ -57,7 +65,11 @@ const getFunFact = async(req,res) =>{
 }
 
 const getCapital = (req,res) =>{
-    state = stateJSON(req, res);
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
 
     
     res.json({"state": state.state,
@@ -67,7 +79,11 @@ const getCapital = (req,res) =>{
 
 
 const getNickname = (req,res) =>{
-    state = stateJSON(req, res);
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
 
     
     res.json({"state": state.state,
@@ -76,7 +92,11 @@ const getNickname = (req,res) =>{
 
 
 const getPopulation = (req,res) =>{
-    state = stateJSON(req, res);
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
     
     res.json({"state": state.state,
         "population": state.population.toLocaleString()});           
@@ -93,8 +113,11 @@ const getAdmission = (req,res) =>{
   }
 
 const statePostAppend = async(req, res)=>{
-    state = stateJSON(req, res);
-    slugURL =req.params.slug;
+       const slugURL = req.params.slug.toUpperCase()
+    const state = data.states.find(st => st.code === slugURL);
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
     try {
         if(!req.body.funfacts){
             return res.status(400).json({ "message":'State fun facts value required'});
@@ -110,11 +133,12 @@ const statePostAppend = async(req, res)=>{
                 });
                 res.status(200).json(result)
         }else{
-            stateFact.funfacts.push(JSON.stringify(req.body.funfacts))
-            await stateFact.save()
+            for (fact in req.body.funfacts){
+                stateFact.funfacts.push(req.body.funfacts[fact])
+            }
+            var result = await stateFact.save()
         }
-        state["funfacts"] = stateFact["funfacts"];
-        res.status(201).json(state);
+        res.status(201).json(result);
     } catch (err) {
         console.error(err);
     }
@@ -125,19 +149,28 @@ const statePatch = async(req, res)=>{
     if (!state) {
         return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
     }
+    if (!req.body.index || isNaN(req.body.index)){
+        return res.status(400).json({ "message":"State fun fact index value required"});
+
+    }
+    if(!req.body.funfact){
+        return res.status(400).json({ "message":'State fun fact value required'});
+    }
 
     try {
-        const result = await State.findOne({sate: req.params.slug.toUpperCase()}).exec();
-        if(!result){
-            return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+        const stateFact = await State.findOne({ sate: req.params.slug.toUpperCase() }).exec();
+        if(!stateFact || stateFact.state !== req.params.slug.toUpperCase()){
+            return res.status(400).json({ "message":`No Fun Facts found for ${state.state}`});
         }else{
-            if(result.funfacts[req.body.index-1]){
-                result.funfacts[req.body.index-1] = req.body.funfact
+            if(stateFact.funfacts[req.body.index-1]){
+                 stateFact.funfacts[req.body.index-1] = req.body.funfact
+                 const result = await stateFact.save();
+                res.status(201).json(result);
+
             }else{
-                return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+                return res.status(404).json({ "message":`No Fun Fact found at that index for ${state.state}`});
             }
         }
-        res.status(201).json(result);
     } catch (err) {
         console.error(err);
     }

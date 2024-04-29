@@ -10,6 +10,6 @@ const stateSchema = new Schema({
         type: String,
         require: false
     }]
-});
+},  { strict: true } );
 
 module.exports = mongoose.model('State', stateSchema);

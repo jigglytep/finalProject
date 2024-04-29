@@ -7,7 +7,7 @@ router.route("/").get(statesController.getAllStates);
 // .delete(statesController.deleteUser);
 
 router.route("/:slug/funfact").get(statesController.getFunFact).post(statesController.statePostAppend)
-.put(statesController.statePatch)
+.patch(statesController.statePatch)
 .delete(statesController.stateDelete);
 
 router.route("/:slug").get(statesController.getState);
