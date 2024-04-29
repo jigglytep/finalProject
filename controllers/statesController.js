@@ -24,19 +24,19 @@ const getAllStates = async (req, res) => {
         res.json(contig);
 
     }else if (req.query.contig === 'false'){
-        let contig =[]
-        contig =[
-            JSON.parse(JSON.stringify(data.states[1])),
-            JSON.parse(JSON.stringify(data.states[10]))]
+        contig = data.states.filter(state => state.code === 'AK' || state.code === 'HI')
+        // contig =[
+        //     JSON.parse(JSON.stringify(data.states[1])),
+        //     JSON.parse(JSON.stringify(data.states[10]))]
 
-        for (index in contig){
-            let fact = facts.find(st => st.state === contig[index].code );    
-            if (!fact) {
-                continue;
-            }else{
-                contig[index]["funfacts"] = fact["funfacts"];
-            }
-        }
+        // for (index in contig){
+        //     let fact = facts.find(st => st.state === contig[index].code );    
+        //     if (!fact) {
+        //         continue;
+        //     }else{
+        //         contig[index]["funfacts"] = fact["funfacts"];
+        //     }
+        // }
         res.json(contig);
     }else{
     res.json(data.states);
