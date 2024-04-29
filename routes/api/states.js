@@ -6,7 +6,9 @@ const statesController = require("../../controllers/statesController");
 router.route("/").get(statesController.getAllStates).put(statesController.catchAll);
 // .delete(statesController.deleteUser);
 
-router.route("/:slug/funfact").get(statesController.getFunFact);
+router.route("/:slug/funfact").get(statesController.getFunFact).post(statesController.statePostAppend)
+.put(statesController.statePatch)
+.delete(statesController.stateDelete);
 
 router.route("/:slug").get(statesController.getState);
 

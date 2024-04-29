@@ -122,6 +122,77 @@ const catchAll = (req, res)=>{
     console.log(req.body)
 }
 
+const statePostAppend = async(req, res)=>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+
+    try {
+        const result = await State.findOne({sate: req.params.slug.toUpperCase()}).execute();
+        if(!result){
+        State.create({
+            state: req.params.slug,
+            "funfacts":[ req.body.funfacts]
+            });
+        }else{
+            result.funfacts = result.funfacts.append(req.body.funfacts)
+        }
+        res.status(201).json(result);
+    } catch (err) {
+        console.error(err);
+    }
+     console.log("post")
+    };
+
+const statePatch = async(req, res)=>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+
+    try {
+        const result = await State.findOne({sate: req.params.slug.toUpperCase()}).execute();
+        if(!result){
+            return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+        }else{
+            if(result.funfacts[req.body.index]){
+                result.funfacts[req.body.index] = req.body.funfact
+            }else{
+                return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+            }
+        }
+        res.status(201).json(result);
+    } catch (err) {
+        console.error(err);
+    }
+    };
+
+const stateDelete = async (req, res)=>{
+    const state = data.states.find(st => st.code === req.params.slug.toUpperCase());
+    if (!state) {
+        return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+    }
+
+    try {
+        const result = await State.findOne({sate: req.params.slug.toUpperCase()}).execute();
+        if(!result){
+            return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+        }else{
+            if(result.funfacts[req.body.index]){
+                result.funfacts.splice(req.body.index,1);
+            }else{
+                return res.status(400).json({ "message":"Invalid state abbreviation parameter"});
+            }
+        }
+        res.status(201).json(result);
+    } catch (err) {
+        console.error(err);
+    }
+    };
+
+
+
 module.exports = {
     getAllStates,
     getState,
@@ -130,5 +201,10 @@ module.exports = {
     getNickname,
     getPopulation,
     catchAll,
-    getAdmission
+    getAdmission,
+    statePostAppend,
+    statePatch,
+    stateDelete
+
+
 }
